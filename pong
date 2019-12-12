@@ -1,0 +1,93 @@
+#Import the library and iniialise the game engine
+import pygame
+pygame.init()
+
+#Open a new window, caption it "Pong"
+screen = pygame.display.set_mode((700, 500))
+pygame.display.set_caption("Pong")
+
+# Here's the variable that runs out game loop
+doExit = False
+
+#the clock will be used to control how fast the screen updates
+clock = pygame.time.Clock()
+
+#variables to hold paddle position
+#these go above game loop
+p1x = 20
+p1y = 200
+p2x = 650
+p2y = 200
+#ball variables
+bx = 350
+by = 250
+bVx = 5
+bVy = 5
+while not doExit:#game loop++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   
+    #event queue stuff
+    clock.tick(60)#set the FPS
+   
+    for event in pygame.event.get():#checks id user did something
+        if event.type == pygame.QUIT:#check if user clicked close
+            doExit = True #Flag that we are done so we exit game loop
+           
+    #game logic will go here
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_i]:
+        p2y-=5
+    if keys[pygame.K_k]:
+        p2y+=5
+        #paddle 2
+    if keys[pygame.K_w]:
+        p1y-=5
+    if keys[pygame.K_s]:
+        p1y+=5
+       
+    # ball-pattle refection
+    if bx < p1x + 20 and by + 20 > p1y and by < p1y + 100:
+        bVx *= -1
+    if bx < p2x + 20 and by + 20 > p2y and by < p2y + 100:
+        bVx *= -1
+   # ball movement
+    bx += bVx
+    by += bVy
+
+   # if bx < 0:# this has beem split up from right wall collision so we can increase scores
+    #    bVx *= -1
+     #   p2Score += 1 #python doesnt do ++ becasue its DUMB
+
+    #reflects ball off side walls of screen
+    if bx < 0  or bx + 20 > 700:
+        bVx *= -1
+        #these lines below should be talking about by and bvy
+    if by < 0 or by + 20 > 700:
+        bVy *= -1
+           
+    #render section willl go here
+        #draw the rectangle
+    screen.fill((0,0,0))#wipe the screen black
+   
+    pygame.draw.rect(screen, (255, 255, 255), (p1x, p1y, 20, 100), 1)        
+    pygame.draw.rect(screen, (255, 255, 255), (p2x, p2y, 20, 100), 1)
+    pygame.draw.rect(screen, (255, 255, 255), (bx, by, 20, 20), 1)                
+    #reflect ball off side walls of screen, change score
+   
+    #display scores
+   # font = pygame.font.Font(None, 74) #use defult font
+   # text - font.render(str(p1Score), 1, (255, 255, 255))
+   # screen.blit(text,(250,10))
+  #  text = font.render(str(p2Score), 1, (255, 255, 255))
+   # screen.blit(text,(420,10))
+       
+   
+    #draw the line in the middle
+    pygame.draw.line(screen, (255,255,255), [349,0], [349,500],5)
+       
+    #update the screen
+    pygame.display.flip()
+           
+           
+#end game loop+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+pygame.quit()# wehn game is done close down pygame
+
